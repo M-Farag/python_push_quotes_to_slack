@@ -1,0 +1,6 @@
+[MAIN]
+key_1=value_1
+
+[SLACK]
+webhook_uri=uri_value
+channel=#channel_name
