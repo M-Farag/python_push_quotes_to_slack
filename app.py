@@ -1,5 +1,6 @@
 import configparser as envParser
 import requests as req
+import pandas as pd
 
 #Init config
 envParser = envParser.ConfigParser()
@@ -23,3 +24,10 @@ def send_message_to_slack(message:str):
     if response.status_code != 200:
         return False
     return True
+
+def get_one_quote():
+    csv = pd.read_csv('quotes.csv')
+    # not_selected_quotes = csv.loc[:,'selected'] == 0
+    # new_csv = csv[not_selected_quotes]
+    return csv.iloc[2,0]
+
