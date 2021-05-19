@@ -12,10 +12,10 @@ def env(key_name:str,section_name='MAIN'):
 
 
 #Send a slack message using a webhook URL
-def send_message_to_slack(message:str):
+def send_message_to_slack(message:dict):
     url = env('webhook_url',section_name='SLACK')
     params = {
-        "text":message,
+        "text":"{}, _By {}".format(message['quote'],message['author']),
         "channel":env('channel',section_name='SLACK')   
     }
 
@@ -34,9 +34,12 @@ def get_one_quote_and_mark_it_as_selected():
     csv.loc[randomly_selected_row.index,'selected'] = 1
     csv.to_csv('quotes.csv',index=False)
 
-    return randomly_selected_row['quote'].item()
+    return {
+        "quote":randomly_selected_row['quote'].item(),
+        "author":randomly_selected_row['author'].item()
+        }
 
 message = get_one_quote_and_mark_it_as_selected()
 
 if message:
-    send_message_to_slack(str(message))
+    send_message_to_slack(message)
