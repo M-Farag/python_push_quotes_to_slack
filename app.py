@@ -25,9 +25,18 @@ def send_message_to_slack(message:str):
         return False
     return True
 
-def get_one_quote():
+def get_one_quote_and_mark_it_as_selected():
     csv = pd.read_csv('quotes.csv')
-    # not_selected_quotes = csv.loc[:,'selected'] == 0
-    # new_csv = csv[not_selected_quotes]
-    return csv.iloc[2,0]
+    
+    randomly_selected_row = csv[csv['selected'] == 0].sample()
+    
+    #mark quote as selected
+    csv.loc[randomly_selected_row.index,'selected'] = 1
+    csv.to_csv('quotes.csv',index=False)
 
+    return randomly_selected_row['quote'].item()
+
+message = get_one_quote_and_mark_it_as_selected()
+
+if message:
+    send_message_to_slack(str(message))
